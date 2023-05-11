@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{29fe61ad-5aa5-4c28-a4a1-811f72f1dc63}</ProjectGuid>
-    <RootNamespace>tree</RootNamespace>
+    <ProjectGuid>{7132e726-b9ce-40da-8e22-b4e243200ede}</ProjectGuid>
+    <RootNamespace>filefilter</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -139,12 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="tree.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\file_lib\file_lib.vcxproj">
-      <Project>{cc5a99be-c452-49e4-8e85-9ea98086b971}</Project>
-    </ProjectReference>
+    <ClCompile Include="file_filter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

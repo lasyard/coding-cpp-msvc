@@ -1,12 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <direct.h>
-#include <io.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
+#include "file_lib.h"
 
 #define FILE_COUNT_BLOCK 256
 #define TIME_BUF_LEN     64
@@ -31,27 +31,14 @@ static void show_help()
            "\n");
 }
 
-static bool is_dir(const struct _finddata_t *file)
-{
-    return (file->attrib & _A_SUBDIR) == _A_SUBDIR;
-}
-
-static void safe_chdir(const char *name)
-{
-    if (_chdir(name) == -1) {
-        fprintf(stderr, "Cannot change directory to \"%s\", errno = %d.", name, errno);
-        exit(-1);
-    }
-}
-
-static struct _finddata_t *safe_malloc_finddata(int count)
+static struct _finddata_t *alloc_finddata(int count)
 {
     struct _finddata_t *p_new = malloc(count * sizeof(struct _finddata_t));
     if (p_new != NULL) {
         return p_new;
     }
     fprintf(stderr, "Not enough memory!\n");
-    exit(-1);
+    return NULL;
 }
 
 static int compare_file(const struct _finddata_t *e1, const struct _finddata_t *e2)
@@ -81,11 +68,13 @@ static void display_and_search(struct _finddata_t *p_file)
             putchar('\t');
         }
         printf("%s\n", p_file->name);
-        safe_chdir(p_file->name);
-        g_depth++;
-        search_file();
-        safe_chdir("..");
-        g_depth--;
+        if (do_chdir(p_file->name)) {
+            g_depth++;
+            search_file();
+        }
+        if (do_chdir("..")) {
+            g_depth--;
+        }
     } else if (g_show_file) {
         for (i = 0; i < g_depth; i++) {
             putchar('\t');
@@ -113,7 +102,10 @@ static void search_file()
     intptr_t h_file;
     int max_count = FILE_COUNT_BLOCK;
     int count = 0;
-    p_file = safe_malloc_finddata(max_count);
+    p_file = alloc_finddata(max_count);
+    if (p_file == NULL) {
+        return;
+    }
     h_file = _findfirst("*", p_file + count);
     if (h_file == -1L) {
         printf("No files in this directory.\n");
@@ -123,10 +115,14 @@ static void search_file()
             ++count;
             if (count >= max_count) {
                 max_count += max_count;
-                struct _finddata_t *p_new = safe_malloc_finddata(max_count);
-                memcpy(p_new, p_file, count * sizeof(struct _finddata_t));
-                free(p_file);
-                p_file = p_new;
+                struct _finddata_t *p_new = alloc_finddata(max_count);
+                if (p_new != NULL) {
+                    memcpy(p_new, p_file, count * sizeof(struct _finddata_t));
+                    free(p_file);
+                    p_file = p_new;
+                } else {
+                    break;
+                }
             }
         }
         if (errno != ENOENT) {
@@ -145,7 +141,7 @@ static void search_file()
 int main(int argc, char *argv[])
 {
     int i;
-    int get_path = 0;
+    bool get_path = false;
     char buf[256];
     if (_getcwd(buf, sizeof(buf) - 1) == NULL) {
         fprintf(stderr, "Cannot get current directory, errno = %d.", errno);
@@ -171,20 +167,22 @@ int main(int argc, char *argv[])
             case '?':
                 show_help();
                 return 0;
-                break;
             default:
+                fprintf(stderr, "Invalid option \"-%c\".\n", argv[i][1]);
+                printf("\n");
+                show_help();
                 return -1;
-                break;
             }
         } else if (!get_path) {
-            if (_chdir(argv[i]) != 0) {
+            if (do_chdir(argv[i])) {
+                get_path = true;
+            } else {
                 fprintf(stderr, "Invalid path %s!\n", argv[i]);
                 return -1;
             }
-            get_path = 1;
         }
     }
     search_file();
-    safe_chdir(buf);
+    do_chdir(buf);
     return 0;
 }

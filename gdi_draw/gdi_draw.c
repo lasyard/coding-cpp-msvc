@@ -1,10 +1,10 @@
-#define WIN32_LEAN_AND_MEAN
 #define _CRT_SECURE_NO_WARNINGS
 #define _CRT_NON_CONFORMING_SWPRINTFS
 
-#include <TCHAR.h>
 #include <stdio.h>
-#include <windows.h>
+#include <tchar.h>
+
+#include <win_lib.h>
 
 #define SX      64
 #define SY      64
@@ -51,12 +51,12 @@ static void draw(HDC hDC)
     DeleteObject(hPen);
     for (i = Y_START; i <= Y_END; i += 5) {
         RECT rect = {-PX, (i - Y_START + 5) * SY, 0, (i - Y_START) * SY};
-        _stprintf(buf, TEXT("%2d"), i);
+        _stprintf(buf, _T("%2d"), i);
         DrawText(hDC, buf, 2, &rect, DT_RIGHT | DT_SINGLELINE | DT_BOTTOM);
     }
     for (i = 0; i < 10; i++) {
         RECT rect = {i * SX, 0, i * SX + SX - 1, -SY};
-        _stprintf(buf, TEXT("%4d"), i + 1970);
+        _stprintf(buf, _T("%4d"), i + 1970);
         DrawText(hDC, buf, 4, &rect, DT_CENTER | DT_SINGLELINE | DT_TOP);
     }
     hPen = CreatePen(PS_SOLID, 3, RGB(255, 255, 0));
@@ -172,43 +172,10 @@ LRESULT CALLBACK wndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
 
 int APIENTRY wWinMain(_In_ HINSTANCE hIns, _In_opt_ HINSTANCE hPrevIns, _In_ LPWSTR cmd, _In_ int show)
 {
-    TCHAR wndClassName[] = TEXT("GDI Draw");
-    MSG msg;
-    HWND hWnd;
-    int r = 0;
-    WNDCLASSEX wce;
-    wce.cbSize = sizeof(WNDCLASSEX);
-    wce.style = CS_OWNDC;
-    wce.lpfnWndProc = (WNDPROC)wndProc;
-    wce.cbClsExtra = 0;
-    wce.cbWndExtra = 0;
-    wce.hInstance = hIns;
-    wce.hIcon = NULL;
-    wce.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wce.hbrBackground = NULL;
-    wce.lpszMenuName = NULL;
-    wce.lpszClassName = wndClassName;
-    wce.hIconSm = NULL;
-    RegisterClassEx(&wce);
-    hWnd = CreateWindow(
-        wndClassName,
-        TEXT("GDI Draw"),
-        WS_TILEDWINDOW,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        NULL,
-        NULL,
-        hIns,
-        0
-    );
+    HWND hWnd = createWindow(hIns, _T("gdi_draw"), _T("GDI Draw"), WS_TILEDWINDOW, wndProc);
     if (hWnd != NULL) {
         ShowWindow(hWnd, show);
-        for (; GetMessage(&msg, NULL, 0, 0);) {
-            DispatchMessage(&msg);
-        }
-        r = (int)msg.wParam;
+        return messageLoop();
     }
-    return r;
+    return -1;
 }

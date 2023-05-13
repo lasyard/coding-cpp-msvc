@@ -4,6 +4,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <math.h>
+#include <stdbool.h>
 
 #include "gl_draw.h"
 
@@ -14,7 +15,7 @@
 /* Parameter of cube */
 #define TEX_HEIGHT 64
 #define TEX_WIDTH  64
-#define CUBE_NUM   1
+#define CUBE_NUM   3
 #define CUBE_LONG  2.0
 
 /* Parameter of logo */
@@ -28,7 +29,7 @@ struct Xyzi {
     int x, y, z;
 };
 
-struct Xyzf {
+struct Xyz {
     GLdouble x, y, z;
 };
 
@@ -70,13 +71,13 @@ static GLuint g_tex;
 static GLubyte g_texImage[TEX_HEIGHT][TEX_WIDTH][4];
 
 /* Control */
-static int g_rotate = 0;
-static int g_isLogo = 0;
-static struct Xyzf g_shift = {1E-6, 0.0, 0.0};
+static bool g_isLogo = false;
+static GLdouble g_rotate = 0.0;
+static struct Xyz g_shift = {1E-6, 0.0, 0.0};
 static struct Xyzi g_start = {0, 0, 0};
 
 /* Camera position control */
-static struct Xyzi g_move = {0, 0, 0};
+static struct Xyz g_move = {0.0, 0.0, 0.0};
 
 /*
  * Draw cubes
@@ -101,7 +102,7 @@ static void glInitCube()
 {
     glEnable(GL_FOG);
     glEnable(GL_TEXTURE_2D);
-    glDisable(GL_LIGHTING);
+    glEnable(GL_LIGHTING);
     glCullFace(GL_BACK);
     glShadeModel(GL_FLAT);
     /* Set projection */
@@ -129,7 +130,7 @@ static void glDrawSquare(GLdouble r, GLdouble g, GLdouble b)
     static GLint pData[] = {0, 1, 2, 3};
     static GLdouble texSEq[] = {1.0, 0.0, 0.0, 0.0};
     static GLdouble texTEq[] = {0.0, 1.0, 0.0, 0.0};
-    glVertexPointer(3, GL_FLOAT, 0, vData);
+    glVertexPointer(3, GL_DOUBLE, 0, vData);
     glColor4d(r, g, b, 1.0);
     glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, pData);
     glTexGendv(GL_S, GL_OBJECT_PLANE, texSEq);
@@ -332,7 +333,7 @@ void glDraw()
     static GLfloat light0Pos[] = {0.0f, 10.0f, 10.0f, 1.0f};
     static GLfloat light1Pos[] = {10.0f, 10.0f, 0.0f, 1.0f};
     static GLdouble angle = 0.0;
-    struct Xyzf camera;
+    struct Xyz camera;
     /* Clear background */
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     /* Set model view matrix */
@@ -360,32 +361,32 @@ void glDraw()
 void switchObject()
 {
     if (g_isLogo) {
-        g_isLogo = 0;
+        g_isLogo = false;
         glInitCube();
     } else {
-        g_isLogo = 1;
+        g_isLogo = true;
         glInitLogo();
     }
 }
 
 void switchRotate()
 {
-    g_rotate = !g_rotate;
+    g_rotate = ((g_rotate == 0.0) ? 0.2 : 0.0);
 }
 
 void zoomIn()
 {
-    g_move.z = 1;
+    g_move.z = 0.1;
 }
 
 void zoomOut()
 {
-    g_move.z = -1;
+    g_move.z = -0.1;
 }
 
 void zoomStop()
 {
-    g_move.z = 0;
+    g_move.z = 0.0;
 }
 
 void shiftStart(int x, int y)
@@ -396,8 +397,8 @@ void shiftStart(int x, int y)
 
 void shiftOn(int x, int y)
 {
-    g_shift.x += (double)(x - g_start.x) / (double)g_width;
-    g_shift.y += (double)(g_start.y - y) / (double)g_height;
+    g_shift.x += 5.0 * (double)(x - g_start.x) / (double)g_width;
+    g_shift.y += 5.0 * (double)(g_start.y - y) / (double)g_height;
     g_start.x = x;
     g_start.y = y;
 }
@@ -405,17 +406,17 @@ void shiftOn(int x, int y)
 void rotateView(int x, int y)
 {
     if (x < 5) {
-        g_move.x = -1;
+        g_move.x = -0.1;
     } else if (x > g_width - 5) {
-        g_move.x = 1;
+        g_move.x = 0.1;
     } else {
-        g_move.x = 0;
+        g_move.x = 0.0;
     }
     if (y < 5) {
-        g_move.y = 1;
+        g_move.y = 0.1;
     } else if (y > g_height - 5) {
-        g_move.y = -1;
+        g_move.y = -0.1;
     } else {
-        g_move.y = 0;
+        g_move.y = 0.0;
     }
 }

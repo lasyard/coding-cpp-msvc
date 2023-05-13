@@ -98,7 +98,6 @@ static void search_file()
 {
     int i;
     struct _finddata_t *p_file;
-    struct _finddata_t file;
     intptr_t h_file;
     int max_count = FILE_COUNT_BLOCK;
     int count = 0;

@@ -43,6 +43,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cmd_caller", "cmd_caller\cm
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Camera", "camera\Camera.vcxproj", "{55DCE8F8-E5D7-495B-8465-631819F35F5D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageConverter", "image_converter\ImageConverter.vcxproj", "{B23831B3-F1F2-47A5-B913-C3F1BF3EDA77}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -139,6 +141,14 @@ Global
 		{55DCE8F8-E5D7-495B-8465-631819F35F5D}.Release|x64.Build.0 = Release|x64
 		{55DCE8F8-E5D7-495B-8465-631819F35F5D}.Release|x86.ActiveCfg = Release|Win32
 		{55DCE8F8-E5D7-495B-8465-631819F35F5D}.Release|x86.Build.0 = Release|Win32
+		{B23831B3-F1F2-47A5-B913-C3F1BF3EDA77}.Debug|x64.ActiveCfg = Debug|x64
+		{B23831B3-F1F2-47A5-B913-C3F1BF3EDA77}.Debug|x64.Build.0 = Debug|x64
+		{B23831B3-F1F2-47A5-B913-C3F1BF3EDA77}.Debug|x86.ActiveCfg = Debug|Win32
+		{B23831B3-F1F2-47A5-B913-C3F1BF3EDA77}.Debug|x86.Build.0 = Debug|Win32
+		{B23831B3-F1F2-47A5-B913-C3F1BF3EDA77}.Release|x64.ActiveCfg = Release|x64
+		{B23831B3-F1F2-47A5-B913-C3F1BF3EDA77}.Release|x64.Build.0 = Release|x64
+		{B23831B3-F1F2-47A5-B913-C3F1BF3EDA77}.Release|x86.ActiveCfg = Release|Win32
+		{B23831B3-F1F2-47A5-B913-C3F1BF3EDA77}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

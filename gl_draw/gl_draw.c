@@ -8,7 +8,8 @@
 
 #include "gl_draw.h"
 
-#define PI     3.1415926
+#include "gl_draw_logo.h"
+
 #define Z_NEAR 0.5
 #define Z_FAR  100.0
 
@@ -17,13 +18,6 @@
 #define TEX_WIDTH  64
 #define CUBE_NUM   3
 #define CUBE_LONG  2.0
-
-/* Parameter of logo */
-#define WIDTH  2.5                       /* Size of square */
-#define RADIUS 5.0                       /* Radius of logo */
-#define SLICE  500                       /* Number of slices */
-#define VISION 10.0                      /* Size of visual field */
-#define DIAG   (sqrt(2.0) * WIDTH / 2.0) /* Half diagonal size of square */
 
 struct Xyzi {
     int x, y, z;
@@ -38,18 +32,6 @@ struct Polar {
 };
 
 #define RAD(x) ((x)*PI / 180)
-
-#define LIMIT_MOVE(m, var, negLimit, negNew, posLimit, posNew)                                                         \
-    do {                                                                                                               \
-        if (m) {                                                                                                       \
-            (var) += (GLdouble)(m);                                                                                    \
-            if ((var) < (negLimit)) {                                                                                  \
-                (var) = (negNew);                                                                                      \
-            } else if ((var) > (posLimit)) {                                                                           \
-                (var) = (posNew);                                                                                      \
-            }                                                                                                          \
-        }                                                                                                              \
-    } while (0)
 
 #define POLAR2XYZ(po, xyz)                                                                                             \
     do {                                                                                                               \
@@ -183,65 +165,6 @@ static void glDrawCube(GLdouble x, GLdouble y, GLdouble z)
     glDisable(GL_COLOR_MATERIAL);
 }
 
-/*
- * Draw a logo
- */
-
-static void glInitLogo()
-{
-    glDisable(GL_FOG);
-    glDisable(GL_LIGHTING);
-    glDisable(GL_TEXTURE_2D);
-    glCullFace(GL_FRONT);
-    glShadeModel(GL_SMOOTH);
-    /* Set projection */
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(
-        -VISION * (GLdouble)g_width / (GLdouble)g_height,
-        VISION * (GLdouble)g_width / (GLdouble)g_height,
-        -VISION,
-        VISION,
-        -100,
-        100
-    );
-}
-
-static void vertexPair(double theta, double phi)
-{
-    glColor4d(
-        (1.0 + sin(theta / 4.0)) / 2.0,
-        (1.0 + sin(theta / 4.0 + 2.0 * PI / 3.0)) / 2.0,
-        (1.0 + sin(theta / 4.0 + 4.0 * PI / 3.0)) / 2.0,
-        1.0
-    );
-    glVertex3d(
-        (RADIUS + DIAG * cos(phi + PI / 4.0)) * cos(theta),
-        (RADIUS + DIAG * cos(phi + PI / 4.0)) * sin(theta),
-        DIAG * sin(phi + PI / 4.0)
-    );
-    glVertex3d(
-        (RADIUS + DIAG * cos(phi + 3.0 * PI / 4.0)) * cos(theta),
-        (RADIUS + DIAG * cos(phi + 3.0 * PI / 4.0)) * sin(theta),
-        DIAG * sin(phi + 3.0 * PI / 4.0)
-    );
-}
-
-static void glDrawLogo()
-{
-    int i;
-    double theta, phi;
-    glBegin(GL_QUAD_STRIP);
-    phi = 0.0;
-    for (i = 0; i < 4 * SLICE; i++) {
-        theta = (double)i * 2.0 * PI / (double)SLICE + PI / 6.0;
-        phi = (double)i * 1.5 * PI / (double)SLICE;
-        vertexPair(theta, phi);
-    }
-    vertexPair(PI / 6.0, 0.0);
-    glEnd();
-}
-
 void glInit(int w, int h)
 {
     static GLfloat lightModelAmbient[] = {0.2f, 0.2f, 0.2f, 1.0f};
@@ -321,7 +244,7 @@ void glInit(int w, int h)
     glDrawLogo();
     glEndList();
     if (g_isLogo) {
-        glInitLogo();
+        glInitLogo(w, h);
     } else {
         glInitCube();
     }
@@ -365,7 +288,7 @@ void switchObject()
         glInitCube();
     } else {
         g_isLogo = true;
-        glInitLogo();
+        glInitLogo(g_width, g_height);
     }
 }
 

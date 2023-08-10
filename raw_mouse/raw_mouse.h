@@ -20,7 +20,6 @@ union RawMouseState {
         unsigned char right : 1;
         unsigned char reserved : 5;
     };
-
     unsigned char ch;
 };
 

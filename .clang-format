@@ -3,7 +3,6 @@ BasedOnStyle: LLVM
 ColumnLimit: 120
 IndentWidth: 4
 UseTab: Never
-SeparateDefinitionBlocks: Always
 BreakBeforeBraces: Linux
 IndentCaseLabels: false
 MaxEmptyLinesToKeep: 1

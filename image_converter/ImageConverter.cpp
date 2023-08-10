@@ -96,7 +96,6 @@ public:
     // Dialog Data
     //{{AFX_DATA(CAboutDlg)
     enum { IDD = IDD_ABOUTBOX };
-
     //}}AFX_DATA
 
     // ClassWizard generated virtual function overrides

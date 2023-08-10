@@ -3,6 +3,7 @@ BasedOnStyle: LLVM
 ColumnLimit: 120
 IndentWidth: 4
 UseTab: Never
+SeparateDefinitionBlocks: Always
 BreakBeforeBraces: Linux
 IndentCaseLabels: false
 MaxEmptyLinesToKeep: 1
@@ -14,6 +15,7 @@ AlignArrayOfStructures: Right
 AlignAfterOpenBracket: BlockIndent
 AlignConsecutiveMacros: true
 AlignTrailingComments: true
+AlignEscapedNewlines: Left
 AllowShortFunctionsOnASingleLine: false
 AllowShortBlocksOnASingleLine: false
 ---

@@ -33,11 +33,11 @@ struct Polar {
 
 #define RAD(x) ((x)*PI / 180)
 
-#define POLAR2XYZ(po, xyz)                                                                                             \
-    do {                                                                                                               \
-        (xyz).x = (po).altitude * cos(RAD((po).latitude)) * sin(RAD((po).longitude));                                  \
-        (xyz).y = (po).altitude * sin(RAD((po).latitude));                                                             \
-        (xyz).z = (po).altitude * cos(RAD((po).latitude)) * cos(RAD((po).longitude));                                  \
+#define POLAR2XYZ(po, xyz)                                                            \
+    do {                                                                              \
+        (xyz).x = (po).altitude * cos(RAD((po).latitude)) * sin(RAD((po).longitude)); \
+        (xyz).y = (po).altitude * sin(RAD((po).latitude));                            \
+        (xyz).z = (po).altitude * cos(RAD((po).latitude)) * cos(RAD((po).longitude)); \
     } while (0)
 
 /* Window */

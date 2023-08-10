@@ -22,6 +22,7 @@ public:
     // Dialog Data
     //{{AFX_DATA(CConvertDialog)
     enum { IDD = IDD_CONVERT };
+
     CComboBox m_fmt_lst;
     CString m_fmtdesc;
     //}}AFX_DATA

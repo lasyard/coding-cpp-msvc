@@ -4,21 +4,23 @@ ColumnLimit: 120
 IndentWidth: 4
 UseTab: Never
 BreakBeforeBraces: Linux
-IndentCaseLabels: false
 MaxEmptyLinesToKeep: 1
-BinPackParameters: false
-BinPackArguments: false
-AllowAllParametersOfDeclarationOnNextLine: false
-AllowAllArgumentsOnNextLine: false
-AlignArrayOfStructures: Right
+
 AlignAfterOpenBracket: BlockIndent
+AlignArrayOfStructures: Right
+AlignConsecutiveAssignments: true
 AlignConsecutiveMacros: true
-AlignTrailingComments: true
 AlignEscapedNewlines: Left
-AllowShortFunctionsOnASingleLine: false
+AlignTrailingComments: true
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortBlocksOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+BinPackArguments: false
+BinPackParameters: false
+IndentCaseLabels: false
 ---
 Language: Cpp
 AccessModifierOffset: -4
-PackConstructorInitializers: CurrentLine
 BreakConstructorInitializers: BeforeComma
+PackConstructorInitializers: CurrentLine
